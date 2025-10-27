@@ -27,7 +27,52 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <header className="bg-tp-deep text-white">
+          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="text-xl font-semibold">TrustPilot‑like</div>
+              <nav className="hidden md:flex gap-3 text-sm opacity-90">
+                <a className="hover:underline" href="#">Kategorier</a>
+                <a className="hover:underline" href="#">Top virksomheder</a>
+                <a className="hover:underline" href="#">Hjælp</a>
+              </nav>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button className="hidden sm:inline-block bg-tp-peach text-black px-4 py-2 rounded-md font-medium">
+                Skriv anmeldelse
+              </button>
+              <a className="text-sm hover:underline" href="#">Log ind</a>
+              <button className="sm:hidden text-sm px-2 py-1 border border-white/20 rounded">M</button>
+            </div>
+          </div>
+        </header>
+
+        <main className="min-h-[60vh]">
+          {children}
+        </main>
+
+        <footer className="bg-gray-100 text-gray-700 mt-8">
+          <div className="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h3 className="font-semibold mb-2">Om os</h3>
+              <p className="text-sm">Basic information om sitet, mission og kontakt.</p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Kategorier</h3>
+              <ul className="text-sm space-y-1">
+                <li><a className="hover:underline" href="#">Restauranter</a></li>
+                <li><a className="hover:underline" href="#">Butikker</a></li>
+                <li><a className="hover:underline" href="#">Service</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Kontakt</h3>
+              <p className="text-sm">email@example.com</p>
+              <p className="text-xs text-gray-500 mt-4">© {new Date().getFullYear()} TrustPilot‑like</p>
+            </div>
+          </div>
+        </footer>
       </body>
     </html>
   );

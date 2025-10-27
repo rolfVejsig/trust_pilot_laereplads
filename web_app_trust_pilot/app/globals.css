@@ -1,15 +1,14 @@
-@import "tailwindcss";
+@import "tailwindcss/preflight";
+@tailwind utilities;
 
 :root {
+  --tp-cream: #F2EDD1;
+  --tp-peach: #F9CB99;
+  --tp-green: #689B8A;
+  --tp-deep: #280A3E;
+
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +18,22 @@
   }
 }
 
+html, body, #__next {
+  height: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
+
+/* Example small utilities for palette when needed */
+.bg-tp-cream { background-color: var(--tp-cream); }
+.bg-tp-peach { background-color: var(--tp-peach); }
+.bg-tp-green { background-color: var(--tp-green); }
+.bg-tp-deep { background-color: var(--tp-deep); }
+
+.text-tp-deep { color: var(--tp-deep); }
+.text-tp-green { color: var(--tp-green); }
+
