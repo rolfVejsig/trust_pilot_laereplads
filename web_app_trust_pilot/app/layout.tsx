@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header"; // Sørg for at stien passer!
+import Footer from "./components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="da">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-50 text-gray-900`}
       >
@@ -32,33 +39,7 @@ export default function RootLayout({
 
         <main className="min-h-[70vh]">{children}</main>
 
-        <footer className="bg-gray-100 text-gray-700 mt-12 border-t border-gray-200">
-          <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="font-semibold mb-2">Om os</h3>
-              <p className="text-sm text-gray-600">
-                Find og anmeld lærepladser i hele Danmark.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-2">Kategorier</h3>
-              <ul className="text-sm space-y-1 text-gray-600">
-                <li><a className="hover:underline" href="#">Restauranter</a></li>
-                <li><a className="hover:underline" href="#">Butikker</a></li>
-                <li><a className="hover:underline" href="#">Service</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-2">Kontakt</h3>
-              <p className="text-sm">kontakt@laerepladser.dk</p>
-              <p className="text-xs text-gray-500 mt-4">
-                © {new Date().getFullYear()} Lærepladser.dk
-              </p>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </body>
     </html>
   );

@@ -20,12 +20,6 @@ export default function Header() {
           <Link href="/categories" className="nav-link">
             Kategorier
           </Link>
-          <Link href="/new" className="nav-link">
-            Nyheder
-          </Link>
-          <Link href="/deals" className="nav-link">
-            Tilbud
-          </Link>
         </nav>
 
         {/* Search bar */}

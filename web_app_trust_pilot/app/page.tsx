@@ -1,39 +1,67 @@
-import Image from "next/image";
+import "./styles/homepage.css";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-          </h1>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <div className="template-style">
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="hero-content">
+          <h2>Lærepladser – Anmeld virksomheder</h2>
+          <h1>Find en læreplads du stoler på</h1>
+          <div className="hero-search">
+            <input
+              type="text"
+              placeholder="Søg efter virksomhed, branche eller by..."
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <button>
+              <i className="material-icons">search</i>
+            </button>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Categories Section (compact chips like Trustpilot) */}
+      <section className="categories">
+        <h2>Populære kategorier</h2>
+        <div className="category-strip">
+          {[
+            { label: "Tømrer", icon: "handyman" },
+            { label: "Smed", icon: "precision_manufacturing" },
+            { label: "IT", icon: "computer" },
+            { label: "Elektriker", icon: "electrical_services" },
+            { label: "Murer", icon: "foundation" },
+            { label: "VVS", icon: "plumbing" },
+            { label: "Butik", icon: "storefront" },
+            { label: "Kontor", icon: "work" },
+          ].map((c) => (
+            <div key={c.label} className="category-item">
+              <span className="category-icon">
+                <i className="material-icons">{c.icon}</i>
+              </span>
+              <span className="category-label">{c.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section className="reviews">
+        <h2>Seneste Anmeldelser</h2>
+        <div className="reviews-grid">
+          {[1, 2, 3].map((review) => (
+            <div key={review} className="review-card">
+              <p>"Fantastisk læreplads! Jeg lærte så meget." - Tømrer</p>
+              <div className="stars">
+                <i className="material-icons">star</i>
+                <i className="material-icons">star</i>
+                <i className="material-icons">star</i>
+                <i className="material-icons">star</i>
+                <i className="material-icons" style={{ color: '#d1d5db' }}>star</i>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
