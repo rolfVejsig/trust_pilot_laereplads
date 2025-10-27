@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" width="140" height="32">
+  <rect width="280" height="64" rx="8" fill="#280A3E" />
+  <g transform="translate(18,12)">
+    <rect width="40" height="40" rx="8" fill="#689B8A" />
+    <path d="M12 22l6 6 14-14" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  </g>
+  <text x="72" y="40" fill="#FFFFFF" font-family="Inter, system-ui, Arial" font-size="20" font-weight="600">lærepladser</text>
+</svg>
