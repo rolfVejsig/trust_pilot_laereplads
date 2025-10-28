@@ -7,7 +7,6 @@ export default function LoginPage() {
 
   return (
     <section className={`${styles.loginRoot} ${styles.loginSection} flex min-h-screen items-center justify-center p-6`}>
-      {/* Background blobs to match front page */}
       <div className={styles.heroShapes} aria-hidden="true">
         <span className={`${styles.blob} ${styles.blobCyan}`} />
         <span className={`${styles.blob} ${styles.blobGreen}`} />
