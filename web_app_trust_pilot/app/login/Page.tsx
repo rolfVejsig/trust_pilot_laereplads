@@ -44,7 +44,7 @@ export default function LoginPage() {
           <Link href="/newaccount" className="text-blue-400 hover:underline">
             Registrer her.</Link>
         </p>
-      </form>
+      </form> 
     </section>
   );
 }
