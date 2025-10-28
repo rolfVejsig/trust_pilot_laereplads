@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { login } from "./login";
+import styles from "./login.module.css"; 
 
 export default function LoginPage() {
 
   return (
-    <section className="flex min-h-screen items-center justify-center bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+    <section className={`${styles.loginRoot} flex min-h-screen items-center justify-center bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 p-6`}>
       <form
         action={async (formData) => {
           "use server";

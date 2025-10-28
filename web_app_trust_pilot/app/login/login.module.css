@@ -1,0 +1,16 @@
+/* Login route scoped styles only (no global overrides) */
+:global(html),
+:global(body) { height: 100%; }
+
+/* Scope: ensure login styles are not overridden by global site styles */
+.loginRoot { isolation: isolate; }
+
+/* Strengthen the exact look for the inputs on login */
+.loginRoot input[type="text"],
+.loginRoot input[type="password"] {
+  background-color: rgba(255,255,255,0.10) !important;
+  border-color: rgba(255,255,255,0.30) !important;
+  color: #ffffff !important;
+}
+
+.loginRoot input::placeholder { color: #d1d5db !important; }

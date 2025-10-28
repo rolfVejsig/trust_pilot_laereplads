@@ -1,9 +1,13 @@
 import "./styles/homepage.css";
 import Image from "next/image";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
-    <div className="template-style">
+    <>
+      <Header />
+      <div className="template-style">
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-shapes" aria-hidden="true">
@@ -187,9 +191,9 @@ export default function Home() {
           </div>
           <div className="promo-images">
             {[
-              { src: "/images/promo/promo-1.svg", alt: "Smilende elev ved laptop" },
-              { src: "/images/promo/promo-2.svg", alt: "Samarbejde i praktik" },
-              { src: "/images/promo/promo-3.svg", alt: "Glade elever i team" },
+              { src: "/images/promo/carpenter.jpg", alt: "Smilende elev ved laptop" },
+              { src: "/images/promo/data technician.jpg", alt: "Samarbejde i praktik" },
+              { src: "/images/promo/welder.jpg", alt: "Glade elever i team" },
             ].map((img) => (
               <div className="promo-photo" key={img.src}>
                 <Image src={img.src} alt={img.alt} fill sizes="(max-width: 900px) 100vw, 33vw" />
@@ -234,6 +238,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }
