@@ -117,15 +117,15 @@ export default function Home() {
       {/* Best in category scroller */}
       <section className="best-category">
         <div className="section-head">
-          <h3>Bedst i kategorien Bank</h3>
+          <h3>Bedst i kategorien Tømmer</h3>
           <a href="#" className="see-more">Se mere</a>
         </div>
         <div className="best-scroller">
           {[
-            { name: "Vestjysk Bank", site: "vestjyskbank.dk", logo: "VB" },
-            { name: "Lån & Spar", site: "lsb.dk", logo: "LS" },
-            { name: "Ferratum Bank", site: "ferratum.dk", logo: "FB" },
-            { name: "AL Finans", site: "alfinans.dk", logo: "AL" },
+            { name: "Tømmer1", site: "Tømmer.dk", logo: "T1" },
+            { name: "Tømmer2", site: "Tømmer.dk", logo: "T2" },
+            { name: "Tømmer3", site: "Tømmer.dk", logo: "T3" },
+            { name: "Tømmer4", site: "Tømmer.dk", logo: "T4" },
           ].map((b) => (
             <div key={b.name} className="best-card">
               <div className="logo-box" aria-hidden="true">{b.logo}</div>
@@ -149,15 +149,15 @@ export default function Home() {
       {/* Another best-in-category block for variety */}
       <section className="best-category">
         <div className="section-head">
-          <h3>Bedst i kategorien Rådgivning og forsikring</h3>
+          <h3>Smed</h3>
           <a href="#" className="see-more">Se mere</a>
         </div>
         <div className="best-scroller">
           {[
-            { name: "APOS", site: "apos.dk", logo: "AP" },
-            { name: "Zinco Rådgivning", site: "zinco.dk", logo: "ZR" },
-            { name: "Premium Rådg.", site: "premium.dk", logo: "PR" },
-            { name: "Dataforsikring", site: "dataforsikring.dk", logo: "DF" },
+            { name: "Smed1", site: "smed.dk", logo: "SM1" },
+            { name: "Smed2", site: "smed.dk", logo: "SM2" },
+            { name: "Smed3", site: "smed.dk", logo: "SM3" },
+            { name: "Smed4", site: "smed.dk", logo: "SM4" },
           ].map((b) => (
             <div key={b.name} className="best-card">
               <div className="logo-box" aria-hidden="true">{b.logo}</div>
