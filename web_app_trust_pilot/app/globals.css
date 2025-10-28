@@ -1,5 +1,4 @@
-@import "tailwindcss/preflight";
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --tp-cream: #F2EDD1;
