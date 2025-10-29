@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createaccount } from "./createaccount";
+import { createaccount } from "@/authlib";
 
 import Link from "next/link";
 
@@ -9,7 +9,8 @@ export default function Register(){
       <form
         action={async (formData) => {
           "use server";
-          await createaccount(formData);
+         const result = await createaccount(formData);
+          if (result?.error) alert(result.error)
           redirect("/");
         }}
         className="w-full max-w-sm space-y-6 rounded-2xl bg-white/10 p-8 shadow-2xl backdrop-blur-md border border-white/20"
