@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { createaccount } from "@/authlib";
 
-import { createaccount } from "./createaccount";
 import Link from "next/link";
 import styles from "./newaccount.module.css";
 
