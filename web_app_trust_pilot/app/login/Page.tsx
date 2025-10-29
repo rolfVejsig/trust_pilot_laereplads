@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { login } from "./login";
 import styles from "./login.module.css"; 
+import { login } from "@/authlib";
 
 export default function LoginPage() {
 
@@ -16,7 +16,7 @@ export default function LoginPage() {
         action={async (formData) => {
           "use server";
           await login(formData);
-          redirect("/");
+          redirect('/');
         }}
         className="w-full max-w-md space-y-6 rounded-2xl bg-white p-8 shadow-xl border border-gray-200"
       >
