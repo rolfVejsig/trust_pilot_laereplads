@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import { createaccount } from "@/authlib";
+
 import { createaccount } from "./createaccount";
 import Link from "next/link";
 import styles from "./newaccount.module.css";
@@ -16,7 +18,8 @@ export default function Register() {
       <form
         action={async (formData) => {
           "use server";
-          await createaccount(formData);
+         const result = await createaccount(formData);
+          if (result?.error) alert(result.error)
           redirect("/");
         }}
         className="w-full max-w-md space-y-6 rounded-2xl bg-white p-8 shadow-xl border border-gray-200"
