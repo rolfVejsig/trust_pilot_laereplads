@@ -1,6 +1,5 @@
 .newRoot { isolation: isolate; }
 
-/* Light background with soft radial tints and floating blobs */
 .newSection {
   position: relative;
   overflow: hidden;
@@ -15,5 +14,4 @@
 .blobGreen { width: 320px; height: 320px; background: #bbf7d0; bottom: -80px; right: -60px; }
 .blobPink { width: 260px; height: 260px; background: #fce7f3; top: 40%; left: 20%; }
 
-/* Optional card helper if needed elsewhere */
 .card { background: #ffffff; border: 1px solid #e5e7eb; color: #0f172a; }

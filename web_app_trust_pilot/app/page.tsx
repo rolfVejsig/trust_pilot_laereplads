@@ -110,7 +110,7 @@ export default function Home() {
           <p>
             Vil du gerne have din virksomhed til at vokse? Styrk dit omdømme med anmeldelser fra Lærepladser.
           </p>
-          <button className="cta-btn">Kom i gang</button>
+            <a href="/newaccount" className="cta-btn">Kom i gang</a>
         </div>
       </section>
 
