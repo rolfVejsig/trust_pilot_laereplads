@@ -7,7 +7,6 @@ import styles from "./newaccount.module.css";
 export default function Register() {
   return (
     <section className={`${styles.newRoot} ${styles.newSection} flex min-h-screen items-center justify-center p-6`}>
-      {/* Background blobs to match login/front page */}
       <div className={styles.heroShapes} aria-hidden="true">
         <span className={`${styles.blob} ${styles.blobCyan}`} />
         <span className={`${styles.blob} ${styles.blobGreen}`} />
@@ -62,7 +61,7 @@ export default function Register() {
 
         <p className="text-sm text-center text-gray-600">
           Har du allerede en konto?{" "}
-          <Link href="/login" className="text-sky-600 hover:underline">Login her</Link>
+          <Link href="/login" className="text-sky-600 hover:underline">Log ind her</Link>
         </p>
       </form>
     </section>

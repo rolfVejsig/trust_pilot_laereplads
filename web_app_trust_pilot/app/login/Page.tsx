@@ -50,7 +50,7 @@ export default function LoginPage() {
             Glemt kodeord?
           </Link>
           <p className="text-gray-600">
-            Ingen account i nu?{" "}
+            Har du ikke en konto?{" "}
             <Link href="/newaccount" className="text-sky-600 hover:underline">Registrer her</Link>
           </p>
         </div>
