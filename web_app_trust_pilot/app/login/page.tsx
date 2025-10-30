@@ -46,7 +46,7 @@ export default function LoginPage() {
         >Login</button>
 
         <div className="flex items-center justify-between text-sm">
-          <Link href="#" className="text-slate-600 hover:underline">
+          <Link href="/forgotpassword" className="text-sky-600 hover:underline">
             Glemt kodeord?
           </Link>
           <p className="text-gray-600">
