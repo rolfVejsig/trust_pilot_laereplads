@@ -474,7 +474,7 @@
   border-radius: 16px;
   padding: 18px;
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 1fr; /* single column since we only show a login CTA */
   gap: 16px;
 }
 
@@ -500,14 +500,18 @@
 
 .promo-images { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .promo-img {
-  height: 120px;
+  height: 220px;
   border-radius: 12px;
   background: linear-gradient(135deg, #bae6fd, #e0f2fe);
 }
 
 /* Real image containers */
-.promo-photo { position: relative; height: 120px; border-radius: 12px; overflow: hidden; }
+.promo-photo { position: relative; height: 220px; border-radius: 12px; overflow: hidden; }
 .promo-photo img { object-fit: cover; }
+
+/* Crossfade rotator */
+.promo-rotator { position: relative; }
+.promo-slide { position: absolute; inset: 0; transition: opacity .8s ease-in-out; }
 
 @media (max-width: 900px) {
   .promo-panel .panel { grid-template-columns: 1fr; }

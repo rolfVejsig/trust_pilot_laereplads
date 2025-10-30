@@ -184,21 +184,9 @@ export default function Home() {
           <div>
             <h4>Hjælp flere elever med at træffe de rigtige valg</h4>
             <p>Del din oplevelse på Lærepladser, så andre kan finde den rette virksomhed og læreplads.</p>
-            <a href="#" className="cta" aria-label="Log ind eller tilmeld dig">
-              Log ind eller tilmeld dig
-              <i className="material-icons" aria-hidden>arrow_forward</i>
+            <a href="/login" className="cta" aria-label="Log ind">
+              Log ind
             </a>
-          </div>
-          <div className="promo-images">
-            {[
-              { src: "/images/promo/carpenter.jpg", alt: "Smilende elev ved laptop" },
-              { src: "/images/promo/data technician.jpg", alt: "Samarbejde i praktik" },
-              { src: "/images/promo/welder.jpg", alt: "Glade elever i team" },
-            ].map((img) => (
-              <div className="promo-photo" key={img.src}>
-                <Image src={img.src} alt={img.alt} fill sizes="(max-width: 900px) 100vw, 33vw" />
-              </div>
-            ))}
           </div>
         </div>
       </section>
