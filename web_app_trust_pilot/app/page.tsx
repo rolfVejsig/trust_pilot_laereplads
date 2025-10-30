@@ -75,7 +75,7 @@ export default function Home() {
       <div className="info-strip">
         <div className="info-pill" role="note">
           Arbejder du på en læreplads?&nbsp;
-          <a href="#" aria-label="Skriv en anmeldelse">Skriv en anmeldelse</a>
+          <a href="/writeareview" aria-label="Skriv en anmeldelse">Skriv en anmeldelse</a>
           <i className="material-icons" aria-hidden>chevron_right</i>
         </div>
       </div>

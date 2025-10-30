@@ -6,7 +6,7 @@ import { login } from "@/authlib";
 export default function LoginPage() {
 
   return (
-    <section className={`${styles.loginRoot} ${styles.loginSection} flex min-h-screen items-center justify-center p-6`}>
+    <section className={`${styles.loginRoot} ${styles.loginSection} flex flex-col min-h-screen items-center justify-center p-6`}>
       <div className={styles.heroShapes} aria-hidden="true">
         <span className={`${styles.blob} ${styles.blobCyan}`} />
         <span className={`${styles.blob} ${styles.blobGreen}`} />
@@ -55,6 +55,15 @@ export default function LoginPage() {
           </p>
         </div>
       </form> 
+      {/* Business CTA like Trustpilot */}
+  <div className="w-full max-w-3xl mt-8 text-center select-none">
+        <h2 className="text-3xl font-extrabold text-slate-900 mb-2">Kommer du fra en virksomhed?</h2>
+        <p className="text-slate-600 mb-4">Opret en virksomhedskonto gratis</p>
+        <div className="flex items-center justify-center gap-3">
+          <Link href="/companylogin" className="rounded-full bg-sky-600 text-white px-5 py-2 font-semibold hover:bg-sky-700">Log ind</Link>
+          <Link href="/newcompany" className="rounded-full border border-sky-600 text-sky-700 px-5 py-2 font-semibold hover:bg-sky-50">Tilmeld dig</Link>
+        </div>
+      </div>
     </section>
   );
 }
