@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const secretKey = process.env.SECRET;
 const key = new TextEncoder().encode(secretKey)
+const isProd = process.env.NODE_ENV === 'production'
 
 export async function encrypt(payload: any) {
     return await new SignJWT(payload).setProtectedHeader({alg: 'HS256'})
@@ -32,6 +33,9 @@ export async function updateSession(request: NextRequest) {
         value: await encrypt(parsed),
         httpOnly: true,
         expires: parsed.expires,
+        secure: isProd,
+        sameSite: 'lax',
+        path: '/',
     });
     return res;
 }
@@ -42,7 +46,13 @@ export async function login(formData: FormData) {
     const expires = new Date(Date.now() + 60*120*1000);
     const session = await encrypt({ user, expires});
 
-    (await cookies()).set('session', session, { expires, httpOnly: true})
+    (await cookies()).set('session', session, {
+        expires,
+        httpOnly: true,
+        secure: isProd,
+        sameSite: 'lax',
+        path: '/',
+    })
 
     return true;
 }
@@ -56,7 +66,13 @@ export async function createaccount(formData: FormData): Promise<any>{
      const expires = new Date(Date.now() + 60*120*1000);
     const session = await encrypt({ user, expires});
 
-    (await cookies()).set('session', session, { expires, httpOnly: true})
+    (await cookies()).set('session', session, {
+        expires,
+        httpOnly: true,
+        secure: isProd,
+        sameSite: 'lax',
+        path: '/',
+    })
 
     return true;
 }
