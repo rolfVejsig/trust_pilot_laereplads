@@ -15,7 +15,7 @@ export default function LoginPage() {
       <form
         action={async (formData) => {
           "use server";
-          await login(formData);
+          await login(formData); 
           redirect('/');
         }}
         className="w-full max-w-md space-y-6 rounded-2xl bg-white p-8 shadow-xl border border-gray-200"
