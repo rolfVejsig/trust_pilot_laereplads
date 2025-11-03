@@ -1,21 +1,27 @@
 USE learepladsDB;
 
-DROP VIEW IF EXISTS GetAllCompanies;
+DROP VIEW IF EXISTS GetCompanies;
 DROP VIEW IF EXISTS CompanyOverview;
+DROP VIEW IF EXISTS GetProfessions;
 DROP PROCEDURE IF EXISTS InsertUser;
 DROP PROCEDURE IF EXISTS UpdateUser;
 DROP PROCEDURE IF EXISTS InsertCompany;
 DROP PROCEDURE IF EXISTS GetCompanyById;
 DROP PROCEDURE IF EXISTS GetCompanyProfessions;
+DROP PROCEDURE IF EXISTS InsertRating;
+DROP PROCEDURE IF EXISTS GetCompanyRatings;
 
 
-CREATE VIEW GetAllCompanies AS
+CREATE VIEW GetCompanies AS
 SELECT CompanyId, CompanyName FROM Companies;
 
 CREATE VIEW CompanyOverview AS
 SELECT * FROM Companies
 INNER JOIN CompanyProfessions ON CompanyID INNER JOIN Professions ON ProfessionId INNER JOIN Categories ON CategoryId
 WHERE CompanyProfessions.Company = Companies.CompanyId AND Professions.ProfessionId = CompanyProfessions.Profession AND Categories.CategoryId = Professions.Category;
+
+CREATE VIEW GetProfessions AS
+SELECT ProfessionId, ProfessionName FROM Professions;
 
 DELIMITER //
 
@@ -52,6 +58,17 @@ CREATE PROCEDURE GetCompanyProfessions(IN CompanyId INT)
 BEGIN
 SELECT ProfessionName, CategoryName FROM CompanyOverview
 WHERE CompanyOverview.CompanyId = CompanyId;
+END//
+
+CREATE PROCEDURE InsertRating( IN Points INT, IN RatingText TEXT, IN UserId INT,  IN CompanyId INT)
+BEGIN
+INSERT INTO Ratings (Points, RatingText, Rater, Company)
+VALUES (Points, RatingText, UserId, CompanyId);
+END//
+
+CREATE PROCEDURE GetCompanyRatings(IN CompanyId INT)
+BEGIN
+SELECT * FROM Ratings WHERE Company = CompanyId;
 END//
 
 

@@ -51,6 +51,8 @@ RatingId INT AUTO_INCREMENT,
 Points INT,
 RatingText TEXT,
 Rater INT,
+Company INT,
 PRIMARY KEY (RatingId),
-FOREIGN KEY (Rater) REFERENCES Users (UserId)
+FOREIGN KEY (Rater) REFERENCES Users (UserId),
+FOREIGN KEY (Company) REFERENCES Companies (CompanyId)
 );
