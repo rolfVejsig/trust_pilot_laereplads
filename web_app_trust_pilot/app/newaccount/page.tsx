@@ -1,36 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import styles from "./newaccount.module.css";
 
-const JOB_TITLES = [
-  "Tømrer",
-  "Murer",
-  "Elektriker",
-  "Smed",
-  "VVS-energispecialist",
-  "Bygningsmaler",
-  "Mekaniker",
-  "Chauffør",
-  "IT-supporter",
-  "Webudvikler",
-  "Kontor",
-  "Detailhandel",
-  "Kok",
-  "Tjener",
-  "Bager",
-  "Gartner",
-  "Landmand",
-];
+type Profession = { id: number; name: string };
 
 export default function Register() {
   const [error, setError] = useState<string | null>(null);
+  const [professions, setProfessions] = useState<Profession[]>([]);
+  const [professionId, setProfessionId] = useState<string>("");
+
+  useEffect(() => {
+    let mounted = true;
+    fetch("/api/professions")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!mounted) return;
+        setProfessions(Array.isArray(data.professions) ? data.professions : []);
+      })
+      .catch(() => {
+        setError("Kunne ikke hente professioner");
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+
+    // Basic client-side validation in Danish
+    if (!formData.get("username") || !formData.get("email") || !formData.get("password") || !formData.get("passwordrepeat") || !professionId) {
+      setError("Manglende påkrævede felter");
+      return;
+    }
+
+    if (formData.get("password") !== formData.get("passwordrepeat")) {
+      setError("Kodeordene matcher ikke");
+      return;
+    }
 
     const response = await fetch("/api/create-user", {
       method: "POST",
@@ -41,12 +52,13 @@ export default function Register() {
         username: formData.get("username"),
         email: formData.get("email"),
         password: formData.get("password"),
+        profession: Number(professionId),
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      setError(errorData.message || "Manglende påkrævede felter");
+      setError(errorData.message || "Kunne ikke oprette konto");
       return;
     }
 
@@ -96,17 +108,19 @@ export default function Register() {
             <select
               id="profession"
               name="profession"
-              defaultValue=""
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-400 appearance-none"
-              onChange={(e) => {
-                const select = e.target;
-                select.classList.toggle('text-gray-900', select.value !== '');
-                select.classList.toggle('text-gray-400', select.value === '');
-              }}
+              value={professionId}
+              onChange={(e) => setProfessionId(e.target.value)}
+              className={`w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-400 appearance-none ${
+                professionId ? "text-gray-900" : "text-gray-400"
+              }`}
             >
-              <option value="" disabled hidden>Vælg en profession</option>
-              {JOB_TITLES.map((title) => (
-                <option key={title} value={title} className="text-gray-900">{title}</option>
+              <option value="" disabled>
+                Vælg en profession
+              </option>
+              {professions.map((p) => (
+                <option key={p.id} value={p.id} className="text-gray-900">
+                  {p.name}
+                </option>
               ))}
             </select>
           </div>
