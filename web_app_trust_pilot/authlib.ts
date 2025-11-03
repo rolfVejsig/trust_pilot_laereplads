@@ -1,4 +1,3 @@
-import { error } from "console";
 import { SignJWT, jwtVerify} from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -49,7 +48,7 @@ export async function login(formData: FormData) {
 
 export async function createaccount(formData: FormData): Promise<any>{
 
-    if (formData.get('password') != formData.get('passwordrepeat'))  throw new Error("Password doesn't match.");
+    if (formData.get('password') != formData.get('passwordrepeat'))  throw new Error("Password dosin't match.");
     
      const user = {name: formData.get('username'), password: formData.get('password'), email: formData.get('email')}
 
