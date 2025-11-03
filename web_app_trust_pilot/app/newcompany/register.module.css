@@ -1,9 +1,9 @@
-/* Business register page */
+
 .page {
     padding: 32px 16px 48px;
     background: #ffffff;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     isolation: isolate;
 }
 
