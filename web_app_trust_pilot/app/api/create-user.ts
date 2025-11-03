@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import mysql from "mysql2/promise";
+import { GetConnection } from "./Connection";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
@@ -16,26 +16,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   console.log("Request body is valid:", { username, email, password });
 
   try {
-    const connection = await mysql.createConnection({
-      host: "localhost",
-      user: "root",
-      password: "root",
-      database: "learepladsDB",
-      port: 3306,
-    });
-
-    console.log("Connected to database");
+    const connection = await GetConnection();
 
     const query = `CALL InsertUser(?, ?, ?, ?)`;
     const values = [username, email, password, 1];
 
-    console.log("Executing query:", query, values);
-
     const [result] = await connection.execute(query, values);
-    console.log("Query result:", result);
 
     await connection.end();
-    console.log("Connection closed");
 
     return res.status(200).json({ message: "User created successfully" });
   } catch (error) {
