@@ -12,10 +12,10 @@ export async function POST(req: NextRequest) {
   const { username, email, password } = await req.json();
 
   if (!username || !email || !password) {
-    console.error("Missing required fields:", { username, email, password });
+    console.error("Manglende påkrævede felter:", { username, email, password });
     return NextResponse.json(
       {
-        message: "Missing required fields",
+        message: "Manglende påkrævede felter",
         received: { username, email, password },
       },
       {status: 400});

@@ -46,7 +46,7 @@ export default function Register() {
 
     if (!response.ok) {
       const errorData = await response.json();
-      setError(errorData.message || "Failed to create account");
+      setError(errorData.message || "Manglende påkrævede felter");
       return;
     }
 
