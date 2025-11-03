@@ -3,28 +3,32 @@
 import styles from "./register.module.css";
 import MultiSelect from "@/app/components/MultiSelect";
 import { registerBusiness } from "./submit";
-
-const JOB_TITLES = [
-  "Tømrer",
-  "Murer",
-  "Elektriker",
-  "Smed",
-  "VVS-energispecialist",
-  "Bygningsmaler",
-  "Mekaniker",
-  "Chauffør",
-  "IT-supporter",
-  "Webudvikler",
-  "Kontor",
-  "Detailhandel",
-  "Kok",
-  "Tjener",
-  "Bager",
-  "Gartner",
-  "Landmand",
-];
+import { useEffect, useState } from "react";
 
 export default function BusinessRegisterPage() {
+  const [options, setOptions] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    async function load() {
+      try {
+        const res = await fetch("/api/professions", { cache: "no-store" });
+        const data = await res.json();
+        if (!mounted) return;
+        setOptions(Array.isArray(data.professions) ? data.professions.map((p: any) => p.name as string) : []);
+      } catch (e) {
+        if (!mounted) return;
+        setLoadError("Kunne ikke hente professioner");
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    load();
+    return () => { mounted = false; };
+  }, []);
+
   return (
     <section className={styles.page}>
       <div className={styles.heroShapes} aria-hidden="true">
@@ -75,8 +79,13 @@ export default function BusinessRegisterPage() {
             
             <div>
               <label className={styles.label}>Lærepladser I tilbyder</label>
-              <MultiSelect name="jobTitles" options={JOB_TITLES} placeholder="Søg fx tømrer, IT-support…" />
+              <MultiSelect
+                name="jobTitles"
+                options={options}
+                placeholder={loading ? "Henter…" : "Søg fx tømrer, IT-support…"}
+              />
               <p className={styles.help}>Vælg én eller flere. Du kan søge og kombinere (fx Tømrer og IT-supporter).</p>
+              {loadError && <p className="text-sm text-red-500">{loadError}</p>}
             </div>
           </div>
 
