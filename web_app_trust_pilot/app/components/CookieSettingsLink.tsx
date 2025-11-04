@@ -2,6 +2,7 @@
 
 import React from "react";
 
+// et link, der åbner cookieindstillingerne
 export default function CookieSettingsLink({ className = "" }: { className?: string }) {
   function onClick(e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();

@@ -99,7 +99,8 @@
   position: relative;
   padding: 96px 20px 40px;
   text-align: center;
-  overflow: hidden;
+  /* let dropdowns pop outside without being clipped */
+  overflow: visible;
 }
 
 /* Lively hero blobs */
@@ -176,6 +177,8 @@
   padding: 10px 12px;
   box-shadow: none; /* minimalist: remove glow/shine */
   transition: border-color 0.2s ease;
+  position: relative;
+  z-index: 60; /* above overlay */
 }
 
 .hero-search:focus-within {
@@ -214,6 +217,75 @@
 
 .hero-search button:hover {
   background: #0284c7;
+}
+
+/* Hero search dropdown */
+.hero-search-wrap {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.hero-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+  z-index: 70; /* above search and overlay */
+  overflow: hidden;
+}
+
+.hero-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.hero-item {
+  padding: 10px 14px;
+  cursor: default;
+}
+
+.hero-item:hover {
+  background: #f8fafc; /* slate-50 */
+}
+
+.hero-title {
+  font-weight: 600;
+  color: #0f172a; /* slate-900 */
+}
+
+.hero-sub {
+  font-size: 12px;
+  color: #475569; /* slate-600 */
+}
+
+.hero-result {
+  padding: 12px 14px;
+  color: #0f172a;
+}
+
+.hero-footer {
+  padding: 10px 14px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 13px;
+  color: #0369a1; /* sky-700 */
+}
+
+/* Dim background when search is open */
+.hero-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.45); /* slate-950 ~45% */
+  backdrop-filter: blur(1px);
+  z-index: 50; /* below search and results */
 }
 
 /* Categories */

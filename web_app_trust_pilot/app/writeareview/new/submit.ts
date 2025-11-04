@@ -9,6 +9,6 @@ export async function submit(formData: FormData) {
     date: String(formData.get("date") || ""),
   };
   console.log("Review submitted:", payload);
-  // Here you could persist to a DB.
+  
   redirect("/");
 }

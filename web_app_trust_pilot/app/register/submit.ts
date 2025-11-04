@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 
 export async function registerBusiness(formData: FormData) {
-  // collect values
   const payload = {
     website: (formData.get("website") || "").toString().trim(),
     companyName: (formData.get("companyName") || "").toString().trim(),
@@ -17,7 +16,6 @@ export async function registerBusiness(formData: FormData) {
 
   console.log("Business registration:", payload);
 
-  // TODO: Persist to DB or send to API
 
   redirect("/login");
 }

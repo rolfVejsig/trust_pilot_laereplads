@@ -4,26 +4,6 @@ import styles from "./register.module.css";
 import MultiSelect from "@/app/components/MultiSelect";
 import { registerBusiness } from "./submit";
 
-const JOB_TITLES = [
-  "Tømrer",
-  "Murer",
-  "Elektriker",
-  "Smed",
-  "VVS-energispecialist",
-  "Bygningsmaler",
-  "Mekaniker",
-  "Chauffør",
-  "IT-supporter",
-  "Webudvikler",
-  "Kontor",
-  "Detailhandel",
-  "Kok",
-  "Tjener",
-  "Bager",
-  "Gartner",
-  "Landmand",
-];
-
 export default function BusinessRegisterPage() {
   return (
     <section className={styles.page}>
@@ -70,7 +50,6 @@ export default function BusinessRegisterPage() {
             </div>
             <div>
               <label className={styles.label}>Lærepladser I tilbyder</label>
-              <MultiSelect name="jobTitles" options={JOB_TITLES} placeholder="Søg fx tømrer, IT-support…" />
               <p className={styles.help}>Vælg én eller flere. Du kan søge og kombinere (fx Tømrer og IT-supporter).</p>
             </div>
             <div className={styles.actionsInline}>
