@@ -57,13 +57,15 @@ INSERT INTO Companies (CompanyName, CompanyPassword, WebpageURL, OwnerFirstName,
 VALUES (CompanyName, CompanyPassword, WebpageURL, OwnerFirstName, OwnerLastName, WorkEmail, PhoneNumber);
 
     SET remaining_values = CompanyProfessions;
-    SET CompanyId = LAST_INSERT_ID(Companies); 
+    SET @CompanyId = LAST_INSERT_ID(Companies); 
 
     WHILE LENGTH(remaining_values) > 0 DO
         SET next_value = SUBSTRING_INDEX(remaining_values, ',', 1);
+        
+		SELECT ProfessionId INTO @ProfessionId FROM Professions WHERE ProfessionName = next_value;
 
             INSERT INTO CompanyProfessions (Company, Profession)
-            VALUES (CompanyId, next_value);
+            VALUES (@CompanyId , @ProfessionId);
 
         -- Remove processed value
         IF remaining_values LIKE '%,%' THEN
@@ -90,6 +92,11 @@ CREATE PROCEDURE InsertRating( IN Points INT, IN RatingText TEXT, IN UserId INT,
 BEGIN
 INSERT INTO Ratings (Points, RatingText, Rater, Company)
 VALUES (Points, RatingText, UserId, CompanyId);
+END//
+
+CREATE PROCEDURE DeleteRating(IN RatingId INT)
+BEGIN
+DELETE FROM Ratings WHERE Ratings.RatingId = RatingId;
 END//
 
 CREATE PROCEDURE GetCompanyRatings(IN CompanyId INT)

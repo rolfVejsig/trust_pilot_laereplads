@@ -1,4 +1,5 @@
 import React from 'react';
+import CookieSettingsLink from './CookieSettingsLink';
 import './Footer.css';
 
 const Footer = () => {
@@ -66,6 +67,10 @@ const Footer = () => {
               <li className="footer-list-item">
                 <span className="material-icons item-icon">policy</span>
                 <a href="#">Privatlivspolitik</a>
+              </li>
+              <li className="footer-list-item">
+                <span className="material-icons item-icon">tune</span>
+                <CookieSettingsLink className="as-link" />
               </li>
             </ul>
           </div>
