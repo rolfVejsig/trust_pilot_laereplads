@@ -97,6 +97,29 @@
 
 .search-button:hover { background: #0284c7; }
 
+/* Search dropdown */
+.search-wrap { position: relative; flex: 1; max-width: 420px; }
+.search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.18);
+  overflow: hidden;
+}
+.search-loading, .search-empty { padding: 14px; font-size: 14px; color: #475569; }
+.search-list { list-style: none; margin: 0; padding: 8px; max-height: 360px; overflow: auto; }
+.search-item { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; padding: 10px 8px; border-radius: 10px; cursor: default; }
+.search-item:hover { background: #f8fafc; }
+.company-title { font-weight: 600; color: #0f172a; }
+.company-sub { font-size: 12px; color: #64748b; grid-column: 1 / span 1; }
+.pill-score { align-self: center; justify-self: end; background: #eef2ff; color: #4338ca; font-weight: 700; font-size: 12px; border-radius: 6px; padding: 2px 6px; }
+.search-footer { padding: 10px 12px; text-align: center; font-weight: 600; color: #2563eb; border-top: 1px solid #e5e7eb; background: #f8fafc; }
+
 .actions {
   display: flex;
   gap: 10px;

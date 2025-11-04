@@ -81,7 +81,6 @@ export default function MultiSelect({ name, options, placeholder = "Søg og væl
         </div>
       )}
 
-      {/* Hidden inputs for form submission */}
       <div className="hidden">
         {values.map((v) => (
           <input key={v} type="checkbox" name={name} value={v} defaultChecked />
