@@ -17,37 +17,55 @@ export async function registerBusiness(formData: FormData) {
     jobTitles: formData.getAll("jobTitles").map(String),
   };
 
-  // Basic validation (Danish messages kept to logs or can be surfaced via redirect params if needed)
   if (!payload.companyName || !payload.workEmail || !payload.password) {
-    console.error("Manglende påkrævede felter (virksomhed)", payload);
-    redirect("/newcompany?error=missing");
+    redirect("/newcompany?error=Manglende%20felter");
+  }
+  if (payload.companyName.length > 20) {
+    redirect("/newcompany?error=Firmanavn%20for%20langt%20(max%2020)");
+  }
+  if (payload.workEmail.length > 40) {
+    redirect("/newcompany?error=Email%20for%20lang%20(max%2040)");
+  }
+  if (payload.firstName && payload.firstName.length > 14) {
+    redirect("/newcompany?error=Fornavn%20for%20langt%20(max%2014)");
+  }
+  if (payload.lastName && payload.lastName.length > 18) {
+    redirect("/newcompany?error=Efternavn%20for%20langt%20(max%2018)");
+  }
+  if (payload.website && payload.website.length > 255) {
+    redirect("/newcompany?error=URL%20for%20lang%20(max%20255)");
+  }
+  // Password rule (same as users): min 8, at least 1 uppercase and 1 digit
+  const strongPw = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+  if (!strongPw.test(payload.password)) {
+    redirect("/newcompany?error=Kodeord%20skal%20have%208%2B%20tegn%2C%201%20stort%20bogstav%20og%201%20tal");
   }
 
   const hashed = crypto.createHash("sha256").update(payload.password).digest("hex");
-  const phoneDigits = payload.phone.replace(/\D/g, "").slice(-8);
+  const phoneDigitsRaw = payload.phone.replace(/\D/g, "");
+  const phoneDigits = phoneDigitsRaw ? phoneDigitsRaw.slice(-8) : "";
+  if (payload.phone && phoneDigits.length !== 8) {
+    redirect("/newcompany?error=Telefon%20skal%20v%C3%A6re%208%20cifre");
+  }
 
   const conn = await GetConnection();
   try {
     await conn.beginTransaction();
+    const [res]: any = await conn.execute(
+      `INSERT INTO Companies (CompanyName, CompanyPassword, WebpageURL, OwnerFirstName, OwnerLastName, WorkEmail, PhoneNumber)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        payload.companyName,
+        hashed,
+        payload.website || null,
+        payload.firstName || null,
+        payload.lastName || null,
+        payload.workEmail,
+        phoneDigits || null,
+      ]
+    );
+    const companyId = Number(res?.insertId || 0);
 
-    // Insert company using stored procedure
-    const insertCompanyQuery = "CALL InsertCompany(?, ?, ?, ?, ?, ?, ?)";
-    const insertCompanyValues = [
-      payload.companyName,
-      hashed,
-      payload.website || null,
-      payload.firstName || null,
-      payload.lastName || null,
-      payload.workEmail,
-      phoneDigits || null,
-    ];
-    await conn.execute(insertCompanyQuery, insertCompanyValues);
-
-    // Get the new company id from this session
-    const [idRows] = await conn.query("SELECT LAST_INSERT_ID() as id");
-    const companyId = Array.isArray(idRows) && idRows.length ? (idRows as any)[0].id as number : 0;
-
-    // Map job title names -> profession ids
     let professionIds: number[] = [];
     if (payload.jobTitles.length) {
       const placeholders = payload.jobTitles.map(() => "?").join(",");

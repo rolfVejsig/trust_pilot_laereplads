@@ -4,11 +4,14 @@ import styles from "./register.module.css";
 import MultiSelect from "@/app/components/MultiSelect";
 import { registerBusiness } from "./submit";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function BusinessRegisterPage() {
+  const searchParams = useSearchParams();
   const [options, setOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const error = searchParams?.get("error") || null;
 
   useEffect(() => {
     let mounted = true;
@@ -42,6 +45,11 @@ export default function BusinessRegisterPage() {
           <p>Registrér din virksomhed og fortæl hvilke lærepladser I tilbyder.</p>
         </div>
 
+        {error && (
+          <div className={styles.card} style={{ color: "#b91c1c", marginBottom: 12 }} role="alert">
+            {decodeURIComponent(error)}
+          </div>
+        )}
         <form action={registerBusiness} className={styles.card}>
           <div className={styles.grid}>
             <div>

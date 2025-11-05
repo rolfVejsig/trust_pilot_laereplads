@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 type Company = { id: number; name: string; url: string | null };
 
@@ -9,6 +10,7 @@ type Props = {
   ariaLabel?: string;
   showOverlay?: boolean;
   footerText?: string;
+  target?: "review" | "write"; // controls click destination
 };
 
 export default function HomeSearch({
@@ -16,6 +18,7 @@ export default function HomeSearch({
   ariaLabel = "Søg efter virksomheder",
   showOverlay = true,
   footerText = "Vis alle resultater",
+  target = "review",
 }: Props) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -82,9 +85,14 @@ export default function HomeSearch({
           ) : (
             <ul className="hero-list">
               {results.map((c) => (
-                <li key={c.id} className="hero-item" role="option">
-                  <div className="hero-title">{c.name}</div>
-                  {c.url && <div className="hero-sub">{c.url}</div>}
+                <li key={c.id} role="option">
+                  <Link
+                    href={target === "write" ? `/writeareview/new?company=${c.id}` : `/review/${c.id}`}
+                    className="hero-item"
+                  >
+                    <div className="hero-title">{c.name}</div>
+                    {c.url && <div className="hero-sub">{c.url}</div>}
+                  </Link>
                 </li>
               ))}
             </ul>
