@@ -25,7 +25,7 @@ export async function DELETE(req: NextRequest) {
   try {
     const connection = await GetConnection();
 
-    const query = `CALL DeleteRating(?, ?, ?, ?)`;
+    const query = `CALL DeleteRating(?)`;
     const values = [ratingId];
 
     const [result] = await connection.execute(query, values);
