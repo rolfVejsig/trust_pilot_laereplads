@@ -10,6 +10,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<Array<{id:number; name:string; url:string|null}>>([]);
+  const [user, setUser] = useState<{id:number; name:string; email:string} | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,6 +41,29 @@ export default function Header() {
     }, 250);
     return () => clearTimeout(t);
   }, [query]);
+
+  // Load session user
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('/api/me', { cache: 'no-store' });
+        const data = await res.json();
+        setUser(data.user ?? null);
+      } catch {}
+    })();
+  }, []);
+
+  const initials = user?.name
+    ? user.name.trim().split(/\s+/).slice(0,2).map(s => s[0]?.toUpperCase()).join('')
+    : '';
+
+  async function handleLogout(){
+    try {
+      await fetch('/api/logout', { method: 'POST' });
+    } finally {
+      window.location.reload();
+    }
+  }
 
   return (
     <header className="header">
@@ -92,9 +116,20 @@ export default function Header() {
           <Link href="/writeareview" className="action-button primary">
             Skriv anmeldelse
           </Link>
-          <Link href="/login" className="action-button secondary">
-            Log ind
-          </Link>
+          {user ? (
+            <>
+              <div className="action-button avatar" title={user.name} aria-label={user.name}>
+                {initials}
+              </div>
+              <button className="action-button secondary" onClick={handleLogout} type="button">
+                Log ud
+              </button>
+            </>
+          ) : (
+            <Link href="/login" className="action-button secondary">
+              Log ind
+            </Link>
+          )}
         </div>
 
         <button

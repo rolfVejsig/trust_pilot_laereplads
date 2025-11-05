@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GetConnection } from "../connection"
+import { GetConnection } from "../connection";
 import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
@@ -10,7 +10,11 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { username, email, password, profession } = await req.json();
+  const body = await req.json();
+  const username = String(body?.username || "").trim();
+  const email = String(body?.email || "").trim();
+  const password = String(body?.password || "");
+  const profession = body?.profession;
 
   if (!username || !email || !password || !profession) {
     console.error("Manglende påkrævede felter:", { username, email, password, profession });
@@ -21,11 +25,28 @@ export async function POST(req: NextRequest) {
       },
       {status: 400});
   }
-
-  console.log("Request body is valid:", { username, email, profession });
+  if (username.length > 14) {
+    return NextResponse.json({ message: "Brugernavn må højst være 14 tegn" }, { status: 400 });
+  }
+  if (email.length > 40) {
+    return NextResponse.json({ message: "Email må højst være 40 tegn" }, { status: 400 });
+  }
+  const strongPw = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+  if (!strongPw.test(password)) {
+    return NextResponse.json({ message: "Kodeord skal være mindst 8 tegn og indeholde 1 stort bogstav og 1 tal" }, { status: 400 });
+  }
 
   try {
     const connection = await GetConnection();
+
+    const [existsRows] = await connection.query(
+      `SELECT 1 FROM Users WHERE UserEmail = ? OR UserName = ? LIMIT 1`,
+      [email, username]
+    );
+    if (Array.isArray(existsRows) && (existsRows as any[]).length) {
+      await connection.end();
+      return NextResponse.json({ message: "Email eller brugernavn er allerede i brug" }, { status: 409 });
+    }
 
     // Hash the password to hex SHA-256 to match schema CHAR(64)
     const hashed = crypto.createHash("sha256").update(String(password)).digest("hex");
@@ -39,15 +60,15 @@ export async function POST(req: NextRequest) {
     const query = `CALL InsertUser(?, ?, ?, ?)`;
     const values = [username, email, hashed, professionId];
 
-    const [result] = await connection.execute(query, values);
+  await connection.execute(query, values);
 
     await connection.end();
 
     return NextResponse.json(
       { message: "Bruger oprettet" },
       {status:200});
-  } catch (error) {
-    console.error("Fejl ved oprettelse af bruger:", error);
+  } catch (error: any) {
+    console.error("Fejl ved oprettelse af bruger:", error?.message || error);
     return NextResponse.json(
       { message: "Intern serverfejl" },
       {status:500}

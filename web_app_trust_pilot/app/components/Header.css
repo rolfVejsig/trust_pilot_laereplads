@@ -152,6 +152,19 @@
   background-color: rgba(255,255,255,0.06);
 }
 
+.action-button.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #22d3ee;
+  color: #0b1021;
+  font-weight: 900;
+}
+
 .menu-button {
   display: none;
   background: none;

@@ -5,7 +5,7 @@ USE learepladsDB;
 
 CREATE TABLE Categories(
 CategoryId INT AUTO_INCREMENT,
-CategoryName VARCHAR(30),
+CategoryName VARCHAR(50),
 PRIMARY KEY (CategoryId)
 );
 

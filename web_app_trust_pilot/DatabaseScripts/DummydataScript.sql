@@ -1,22 +1,42 @@
 -- ====== Categories ======
 INSERT INTO Categories (CategoryName) VALUES
-('Healthcare'),
-('Technology'),
-('Education'),
-('Finance'),
-('Construction');
+('Teknologi, byggeri og transport'),
+('Omsorg, sundhed og pædagogik'),
+('Kontor, handel og forretningsservice'),
+('Fødevare, jordbrug og oplevelser'),
 
 -- ====== Professions ======
 INSERT INTO Professions (ProfessionName, Category) VALUES
-('Doctor', 1),
-('Nurse', 1),
-('Software Engineer', 2),
-('Data Analyst', 2),
-('Teacher', 3),
-('Accountant', 4),
-('Financial Advisor', 4),
-('Architect', 5),
-('Civil Engineer', 5);
+('Tømrer', 1),
+('Murer', 1),
+('Elektriker', 1),
+('Smed', 1),
+('Industritekniker', 1),
+('VVS-energispecialist', 1),
+('Bygningsmaler', 1),
+('Mekaniker', 1),
+('Chauffør', 1),
+('IT-supporter', 1),
+('Social- og sundhedsassistent', 2),
+('Social- og sundhedshjælper', 2),
+('Pædagogisk assistent', 2),
+('Tandklinikassistent', 2),
+('Hospitalsservice', 2),
+('Optiker', 2),
+('Kontor', 3),
+('Detailhandel', 3),
+('Handelsassistent', 3),
+('Finans', 4),
+('Eventkoordinator', 4),
+('Turisme og service', 4),
+('Bager', 4),
+('Kok', 4),
+('Tjener', 4),
+('Gartner', 4),
+('Landmand', 4),
+('Dyrepasser', 4),
+('Fiskeri', 4),
+('Mad til mennesker (catering)', 4);
 
 -- ====== Users ======
 INSERT INTO Users (UserName, UserEmail, UserPassword, Profession) VALUES
