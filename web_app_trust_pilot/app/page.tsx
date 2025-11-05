@@ -48,13 +48,26 @@ function StarBoxes({ points }: { points: number }) {
 async function getLatestReviews(limit = 8): Promise<LatestReview[]> {
   try {
     const conn = await GetConnection();
+    // Discover column names dynamically to handle schema changes
+  const [cols] = await conn.query(`SHOW COLUMNS FROM Ratings`);
+  const names = new Set((cols as any[]).map(c => String(c.Field)));
+  const textCol = names.has('Text') ? 'Text' : (names.has('ReviewText') ? 'ReviewText' : 'RatingText');
+  const titleCol = names.has('Title') ? 'Title' : (names.has('ReviewTitle') ? 'ReviewTitle' : (names.has('RatingTitle') ? 'RatingTitle' : null));
+  const dateCol = names.has('ReviewDate') ? 'ReviewDate' : (names.has('Date') ? 'Date' : (names.has('CreatedAt') ? 'CreatedAt' : (names.has('RatingDate') ? 'RatingDate' : null)));
+
+    const selectFields = [
+      'r.RatingId AS id',
+      'r.Points AS points',
+      `r.${textCol} AS body`,
+      titleCol ? `r.${titleCol} AS title` : 'NULL AS title',
+      dateCol ? `r.${dateCol} AS date` : 'NULL AS date',
+      'u.UserName AS userName',
+      'c.CompanyId AS companyId',
+      'c.CompanyName AS companyName'
+    ].join(',\n              ');
+
     const [rows] = await conn.query(
-      `SELECT r.RatingId AS id,
-              r.Points   AS points,
-              r.RatingText AS text,
-              u.UserName AS userName,
-              c.CompanyId AS companyId,
-              c.CompanyName AS companyName
+      `SELECT ${selectFields}
        FROM Ratings r
        JOIN Users u ON u.UserId = r.Rater
        JOIN Companies c ON c.CompanyId = r.Company
@@ -65,27 +78,15 @@ async function getLatestReviews(limit = 8): Promise<LatestReview[]> {
     );
     await conn.end();
     const list = rows as any[];
-    return (Array.isArray(list) ? list : []).map(r => {
-      const raw = String(r.text || "");
-      let body = raw, title = "", date = "";
-      try {
-        const obj = JSON.parse(raw);
-        if (obj && typeof obj === 'object' && 'body' in obj) {
-          body = String(obj.body || "");
-          title = obj.title ? String(obj.title) : "";
-          date = obj.date ? String(obj.date) : "";
-        }
-      } catch {}
-      return {
-        id: Number(r.id),
-        points: Number(r.points),
-        body,
-        title,
-        date,
-        companyId: Number(r.companyId),
-        companyName: String(r.companyName || ""),
-      } as LatestReview;
-    });
+    return (Array.isArray(list) ? list : []).map(r => ({
+      id: Number(r.id),
+      points: Number(r.points),
+      body: String(r.body || ""),
+      title: r.title ? String(r.title) : undefined,
+      date: r.date ? String(r.date) : undefined,
+      companyId: Number(r.companyId),
+      companyName: String(r.companyName || ""),
+    } as LatestReview));
   } catch (e) {
     console.error("Kunne ikke hente seneste anmeldelser:", e);
     return [];

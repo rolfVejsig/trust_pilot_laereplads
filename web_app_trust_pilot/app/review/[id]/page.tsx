@@ -65,26 +65,37 @@ async function getCompanyAndReviews(id: number) {
     }
     const company = cList[0] as Company;
 
+    // Discover rating columns dynamically to adapt to schema changes
+  const [cols] = await conn.query(`SHOW COLUMNS FROM Ratings`);
+  const names = new Set((cols as any[]).map(c => String(c.Field)));
+  const textCol = names.has('Text') ? 'Text' : (names.has('ReviewText') ? 'ReviewText' : 'RatingText');
+  const titleCol = names.has('Title') ? 'Title' : (names.has('ReviewTitle') ? 'ReviewTitle' : (names.has('RatingTitle') ? 'RatingTitle' : null));
+  const dateCol = names.has('ReviewDate') ? 'ReviewDate' : (names.has('Date') ? 'Date' : (names.has('CreatedAt') ? 'CreatedAt' : (names.has('RatingDate') ? 'RatingDate' : null)));
+
+    const selectFields = [
+      'r.RatingId AS id',
+      'r.Points AS points',
+      `r.${textCol} AS body`,
+      titleCol ? `r.${titleCol} AS title` : 'NULL AS title',
+      dateCol ? `r.${dateCol} AS date` : 'NULL AS date',
+      'u.UserName AS userName'
+    ].join(', ');
+
     const [rRows] = await conn.query(
-      `SELECT r.RatingId AS id, r.Points AS points, r.RatingText AS text, u.UserName AS userName
+      `SELECT ${selectFields}
        FROM Ratings r JOIN Users u ON u.UserId = r.Rater
        WHERE r.Company = ? AND u.UserEmail NOT LIKE '%@example.com'
        ORDER BY r.RatingId DESC`,
       [id]
     );
-    const reviews = (rRows as any[]).map(r => {
-      const raw = String(r.text || "");
-      let body = raw, title = "", date = "";
-      try {
-        const obj = JSON.parse(raw);
-        if (obj && typeof obj === 'object' && 'body' in obj) {
-          body = String(obj.body || "");
-          title = obj.title ? String(obj.title) : "";
-          date = obj.date ? String(obj.date) : "";
-        }
-      } catch {}
-      return { id: Number(r.id), points: Number(r.points), text: body, title, date, userName: String(r.userName || "") } as Review;
-    }) as Review[];
+    const reviews = (rRows as any[]).map(r => ({
+      id: Number(r.id),
+      points: Number(r.points),
+      text: String(r.body || ""),
+      title: r.title ? String(r.title) : undefined,
+      date: r.date ? String(r.date) : undefined,
+      userName: String(r.userName || ""),
+    })) as Review[];
 
     const [aRows] = await conn.query(
       `SELECT IFNULL(AVG(r.Points), 0) AS avgScore, COUNT(*) AS reviewCount
