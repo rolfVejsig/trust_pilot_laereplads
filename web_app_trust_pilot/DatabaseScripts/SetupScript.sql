@@ -49,7 +49,9 @@ FOREIGN KEY (Profession) REFERENCES Professions (ProfessionId)
 CREATE TABLE Ratings(
 RatingId INT AUTO_INCREMENT,
 Points INT,
+RatingTitle VARCHAR(20),
 RatingText TEXT,
+RatingDate DATE,
 Rater INT,
 Company INT,
 PRIMARY KEY (RatingId),

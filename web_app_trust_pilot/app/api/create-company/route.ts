@@ -32,15 +32,9 @@ export async function POST(req: NextRequest) {
     // Hash the password to hex SHA-256 to match schema CHAR(64)
     const hashed = crypto.createHash("sha256").update(String(companyPassword)).digest("hex");
 
-    const professionId = Number(professions);
-    if (!Number.isInteger(professionId) || professionId <= 0) {
-      await connection.end();
-      return NextResponse.json({ message: "Ugyldig profession" }, { status: 400 });
-    }
-
-    const query = `CALL InsertCompany(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const query = `CALL InsertCompany(?, ?, ?, ?, ?, ?, ?, ?)`;
     const values = [companyName,  hashed, webpageURL, ownerFirstName, ownerLastName,
-        workEmail, phoneNumber, professionId, professions];
+        workEmail, phoneNumber, professions];
 
     const [result] = await connection.execute(query, values);
 

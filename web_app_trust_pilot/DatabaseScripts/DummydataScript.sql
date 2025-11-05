@@ -3,7 +3,7 @@ INSERT INTO Categories (CategoryName) VALUES
 ('Teknologi, byggeri og transport'),
 ('Omsorg, sundhed og pædagogik'),
 ('Kontor, handel og forretningsservice'),
-('Fødevare, jordbrug og oplevelser'),
+('Fødevare, jordbrug og oplevelser');
 
 -- ====== Professions ======
 INSERT INTO Professions (ProfessionName, Category) VALUES
