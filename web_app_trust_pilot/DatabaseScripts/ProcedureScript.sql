@@ -3,6 +3,7 @@ USE learepladsDB;
 DROP VIEW IF EXISTS GetCompanies;
 DROP VIEW IF EXISTS CompanyOverview;
 DROP VIEW IF EXISTS GetProfessions;
+DROP VIEW IF EXISTS GetRatings;
 DROP PROCEDURE IF EXISTS InsertUser;
 DROP PROCEDURE IF EXISTS UpdateUser;
 DROP PROCEDURE IF EXISTS DeleteUser;
@@ -10,6 +11,7 @@ DROP PROCEDURE IF EXISTS InsertCompany;
 DROP PROCEDURE IF EXISTS GetCompanyById;
 DROP PROCEDURE IF EXISTS GetCompanyProfessions;
 DROP PROCEDURE IF EXISTS InsertRating;
+DROP PROCEDURE IF EXISTS DeleteRating;
 DROP PROCEDURE IF EXISTS GetCompanyRatings;
 
 
@@ -23,6 +25,10 @@ WHERE CompanyProfessions.Company = Companies.CompanyId AND Professions.Professio
 
 CREATE VIEW GetProfessions AS
 SELECT ProfessionId, ProfessionName FROM Professions;
+
+CREATE VIEW GetRatings AS
+SELECT RatingId, Points, CompanyId, CompanyName, UserId, UserName FROM Ratings INNER JOIN Companies ON Company INNER JOIN Users ON Rater
+WHERE Ratings.Company = Companies.CompanyId AND Ratings.Rater = Users.UserId;
 
 DELIMITER //
 
