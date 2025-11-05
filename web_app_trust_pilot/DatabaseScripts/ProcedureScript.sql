@@ -94,6 +94,11 @@ INSERT INTO Ratings (Points, RatingText, Rater, Company)
 VALUES (Points, RatingText, UserId, CompanyId);
 END//
 
+CREATE PROCEDURE DeleteRating(IN RatingId INT)
+BEGIN
+DELETE FROM Ratings WHERE Ratings.RatingId = RatingId;
+END//
+
 CREATE PROCEDURE GetCompanyRatings(IN CompanyId INT)
 BEGIN
 SELECT * FROM Ratings WHERE Company = CompanyId;
