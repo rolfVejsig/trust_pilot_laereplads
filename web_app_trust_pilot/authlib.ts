@@ -1,6 +1,8 @@
-import { SignJWT, jwtVerify} from "jose";
+import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+import { GetConnection } from "./app/api/connection";
 
 const secretKey = process.env.SECRET;
 const key = new TextEncoder().encode(secretKey)
@@ -35,15 +37,43 @@ export async function updateSession(request: NextRequest) {
     return res;
 }
 
+export type SessionUser = { id: number; name: string; email: string };
+
+function validatePasswordStrength(pw: string) {
+    // Min 8 chars, at least 1 uppercase and 1 number
+    return /^(?=.*[A-Z])(?=.*\d).{8,}$/.test(pw);
+}
+
 export async function login(formData: FormData) {
-    const user = {name: formData.get('username'), password: formData.get('password')}
+    const identifier = String(formData.get('username') || '').trim();
+    const password = String(formData.get('password') || '');
 
-    const expires = new Date(Date.now() + 60*120*1000);
-    const session = await encrypt({ user, expires});
+    if (!identifier || !password) throw new Error('Udfyld brugernavn/email og kodeord');
 
-    (await cookies()).set('session', session, { expires, httpOnly: true})
+    const hashed = crypto.createHash('sha256').update(password).digest('hex');
 
-    return true;
+    const conn = await GetConnection();
+    try {
+        const [rows] = await conn.query(
+            `SELECT UserId as id, UserName as name, UserEmail as email, UserPassword as hash
+             FROM Users
+             WHERE UserEmail = ? OR UserName = ?
+             LIMIT 1`,
+            [identifier, identifier]
+        );
+        const list = rows as any[];
+        if (!Array.isArray(list) || list.length === 0) throw new Error('Forkert brugernavn eller kodeord');
+        const u = list[0];
+        if (String(u.hash) !== hashed) throw new Error('Forkert brugernavn eller kodeord');
+
+        const user: SessionUser = { id: Number(u.id), name: String(u.name || ''), email: String(u.email || '') };
+        const expires = new Date(Date.now() + 60 * 120 * 1000);
+        const session = await encrypt({ user, expires });
+        (await cookies()).set('session', session, { expires, httpOnly: true });
+        return true;
+    } finally {
+        try { await conn.end(); } catch {}
+    }
 }
 
 export async function createaccount(formData: FormData): Promise<any>{
@@ -57,5 +87,23 @@ export async function createaccount(formData: FormData): Promise<any>{
 
     (await cookies()).set('session', session, { expires, httpOnly: true})
 
+    return true;
+}
+
+export async function getSessionUser(): Promise<SessionUser | null> {
+    const jar = await cookies();
+    const session = jar.get('session')?.value;
+    if (!session) return null;
+    try {
+        const payload = await decrypt(session);
+        return payload.user as SessionUser;
+    } catch {
+        return null;
+    }
+}
+
+export async function logout() {
+    const jar = await cookies();
+    jar.set('session', '', { expires: new Date(0), httpOnly: true });
     return true;
 }

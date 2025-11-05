@@ -3,7 +3,6 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import StarRating from "../../components/StarRating";
 import DatePicker from "../../components/DatePicker";
-import { submit } from "./submit";
 
 export default function WriteReviewForm() {
   return (
@@ -13,7 +12,6 @@ export default function WriteReviewForm() {
         <form
           action={async (formData) => {
             "use server";
-            await submit(formData);
           }}
         >
           <div className="review-card">

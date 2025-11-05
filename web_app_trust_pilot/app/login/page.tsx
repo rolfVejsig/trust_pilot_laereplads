@@ -30,12 +30,14 @@ export default function LoginPage() {
             type="text"
             name="username"
             placeholder="Brugernavn/Email"
+            required
             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-400"
           />
           <input
             type="password"
             name="password"
             placeholder="Kodeord"
+            required
             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-400"
           />
         </div>

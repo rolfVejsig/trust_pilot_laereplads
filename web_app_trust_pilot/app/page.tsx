@@ -3,6 +3,7 @@ import Image from "next/image";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CookieConsent from "./components/CookieConsent";
+import HomeSearch from "./components/HomeSearch";
 
 export default function Home() {
   return (
@@ -19,15 +20,7 @@ export default function Home() {
         <div className="hero-content">
           <h2>Lærepladser – Anmeld virksomheder</h2>
           <h1>Find en læreplads du stoler på</h1>
-          <div className="hero-search">
-            <input
-              type="text"
-              placeholder="Søg efter virksomhed, branche eller by..."
-            />
-            <button>
-              <i className="material-icons">search</i>
-            </button>
-          </div>
+          <HomeSearch />
         </div>
       </section>
 
@@ -105,7 +98,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Business CTA banner */}
       <section className="business-cta peach" aria-label="Virksomheds-CTA">
         <div className="band">
           <p>
@@ -115,7 +107,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Best in category scroller */}
       <section className="best-category">
         <div className="section-head">
           <h3>Bedst i kategorien Tømmer</h3>
@@ -147,7 +138,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Another best-in-category block for variety */}
       <section className="best-category">
         <div className="section-head">
           <h3>Smed</h3>

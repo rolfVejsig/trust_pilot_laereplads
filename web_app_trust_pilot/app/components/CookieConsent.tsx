@@ -32,6 +32,7 @@ export default function CookieConsent() {
     };
   }, []);
 
+  // gem cookie consent i local storage
   function saveConsent(all: boolean) {
     const payload: Consent = {
       necessary: true,

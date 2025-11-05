@@ -2,6 +2,7 @@ import "../styles/homepage.css";
 import "../styles/writeareview.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import HomeSearch from "../components/HomeSearch";
 
 export default function WriteAReview() {
 	return (
@@ -19,18 +20,10 @@ export default function WriteAReview() {
 						<p style={{ margin: "0 0 16px", color: "#334155" }}>
 							Hjælp andre med at træffe de rigtige valg.
 						</p>
-						<div className="hero-search" role="search" aria-label="Find virksomhed for anmeldelse">
-							<input
-								type="text"
-								placeholder="Find en virksomhed at anmelde"
-								aria-label="Søg virksomhed"
-							/>
-							<button aria-label="Søg">
-								<i className="material-icons" aria-hidden>
-									search
-								</i>
-							</button>
-						</div>
+						<HomeSearch
+							placeholder="Find en virksomhed at anmelde"
+							ariaLabel="Søg virksomhed"
+						/>
 					</div>
 				</section>
 

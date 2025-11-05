@@ -43,15 +43,22 @@ export default function Register() {
       return;
     }
 
+    const username = String(formData.get("username") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const password = String(formData.get("password") || "");
+    if (username.length > 14) { setError("Brugernavn må højst være 14 tegn"); return; }
+    if (email.length > 40) { setError("Email må højst være 40 tegn"); return; }
+    if (!/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(password)) { setError("Kodeord skal være mindst 8 tegn og indeholde 1 stort bogstav og 1 tal"); return; }
+
     const response = await fetch("/api/create-user", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: formData.get("username"),
-        email: formData.get("email"),
-        password: formData.get("password"),
+        username,
+        email,
+        password,
         profession: Number(professionId),
       }),
     });
