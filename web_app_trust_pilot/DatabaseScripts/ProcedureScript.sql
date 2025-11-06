@@ -63,7 +63,7 @@ INSERT INTO Companies (CompanyName, CompanyPassword, WebpageURL, OwnerFirstName,
 VALUES (CompanyName, CompanyPassword, WebpageURL, OwnerFirstName, OwnerLastName, WorkEmail, PhoneNumber);
 
     SET remaining_values = CompanyProfessions;
-    SET @CompanyId = LAST_INSERT_ID(Companies); 
+    SET @CompanyId = LAST_INSERT_ID(); 
 
     WHILE LENGTH(remaining_values) > 0 DO
         SET next_value = SUBSTRING_INDEX(remaining_values, ',', 1);
