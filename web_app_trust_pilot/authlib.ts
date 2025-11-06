@@ -4,10 +4,21 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { GetConnection } from "./app/api/connection";
 
-const secretKey = process.env.SECRET;
-const key = new TextEncoder().encode(secretKey)
+function getSigningKey(): Uint8Array {
+    // Prefer explicit env secrets; fall back to a stable dev secret to avoid zero-length key
+    const candidates = [process.env.SECRET, process.env.JWT_SECRET, process.env.NEXTAUTH_SECRET];
+    let secret = candidates.find((v) => v && String(v).trim().length > 0)?.trim();
+    if (!secret) {
+        // Construct a non-empty dev-only secret; consider overriding via env in production
+        const seed = `${process.env.DB_HOST || ''}:${process.env.DB_NAME || ''}:${process.env.NODE_ENV || 'development'}`;
+        secret = seed || 'dev-secret';
+    }
+    // Derive a 32-byte key for HS256 even if the secret string is short
+    return crypto.createHash('sha256').update(secret).digest();
+}
 
 export async function encrypt(payload: any) {
+    const key = getSigningKey();
     return await new SignJWT(payload).setProtectedHeader({alg: 'HS256'})
     .setIssuedAt()
     .setExpirationTime('2 hour from now')
@@ -15,6 +26,7 @@ export async function encrypt(payload: any) {
 }
 
 export async function decrypt(input: string): Promise<any> {
+    const key = getSigningKey();
     const { payload } = await jwtVerify(input, key, {
         algorithms: ['HS256'],
     });
@@ -81,7 +93,7 @@ export async function login(formData: FormData) {
             if (ok) {
                 // Migrate to SHA-256 immediately
                 try {
-                    await (await GetConnection()).execute(`UPDATE Users SET UserPassword = ? WHERE UserId = ?`, [hashed, Number(u.id)]);
+                    await conn.execute(`UPDATE Users SET UserPassword = ? WHERE UserId = ?`, [hashed, Number(u.id)]);
                 } catch {}
             }
         }

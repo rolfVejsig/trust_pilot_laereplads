@@ -10,7 +10,7 @@ type Props = {
   ariaLabel?: string;
   showOverlay?: boolean;
   footerText?: string;
-  target?: "review" | "write"; // controls click destination
+  target?: "review" | "write"; 
 };
 
 export default function HomeSearch({

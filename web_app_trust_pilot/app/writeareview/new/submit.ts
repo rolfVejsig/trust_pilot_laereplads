@@ -26,7 +26,6 @@ export async function submit(formData: FormData) {
 
   const conn = await GetConnection();
   try {
-    // Resolve a valid raterId (handle sessions created without numeric id)
     let raterId = Number((user as any).id);
     if (!Number.isInteger(raterId) || raterId <= 0) {
       if (user?.email) {
@@ -44,7 +43,6 @@ export async function submit(formData: FormData) {
       redirect(`/login?returnTo=${encodeURIComponent(`/writeareview/new?company=${companyId || ''}`)}`);
     }
 
-    // Validate that raterId actually exists in DB to satisfy FK
     {
       const [okRows] = await conn.query(
         `SELECT 1 as ok FROM Users WHERE UserId = ? LIMIT 1`,
@@ -56,7 +54,6 @@ export async function submit(formData: FormData) {
       }
     }
 
-    // Optional: ensure company exists too (avoid FK on Company)
     {
       const [cRows] = await conn.query(
         `SELECT 1 as ok FROM Companies WHERE CompanyId = ? LIMIT 1`,
@@ -67,7 +64,6 @@ export async function submit(formData: FormData) {
         redirect(`/writeareview/new?company=${companyId || ''}&error=${encodeURIComponent('Virksomheden findes ikke')}`);
       }
     }
-    // Discover rating columns to construct an INSERT that matches the schema
   const [cols] = await conn.query(`SHOW COLUMNS FROM Ratings`);
   const names = new Set((cols as any[]).map(c => String(c.Field)));
   const textCol = names.has('Text') ? 'Text' : (names.has('ReviewText') ? 'ReviewText' : 'RatingText');
@@ -78,7 +74,7 @@ export async function submit(formData: FormData) {
   const colsList = [ 'Points', textCol, 'Rater', 'Company' ] as string[];
   const vals = [ rating, body, raterId, companyId ] as any[];
     if (titleCol) { colsList.splice(2, 0, titleCol); vals.splice(2, 0, (title || null)); }
-    // Normalize date to YYYY-MM-DD if provided
+    
     let normDate: string | null = null;
     if (date) {
       const d = new Date(date);
@@ -88,7 +84,7 @@ export async function submit(formData: FormData) {
         const dd = String(d.getDate()).padStart(2, '0');
         normDate = `${yyyy}-${mm}-${dd}`;
       } else {
-        normDate = date; // let DB try if custom format
+        normDate = date; 
       }
     }
     if (dateCol) { colsList.splice(titleCol ? 3 : 2, 0, dateCol); vals.splice(titleCol ? 3 : 2, 0, (normDate || null)); }
