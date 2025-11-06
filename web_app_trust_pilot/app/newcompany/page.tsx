@@ -2,7 +2,6 @@
 
 import styles from "./register.module.css";
 import MultiSelect from "@/app/components/MultiSelect";
-import { registerBusiness } from "./submit";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -12,7 +11,7 @@ export default function BusinessRegisterPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const error = searchParams?.get("error") || null;
+  const searcherror = searchParams?.get("error") || null;
 
   useEffect(() => {
     let mounted = true;
