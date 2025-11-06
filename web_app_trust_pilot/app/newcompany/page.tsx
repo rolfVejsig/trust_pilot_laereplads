@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 export default function BusinessRegisterPage() {
   const [options, setOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -29,6 +30,60 @@ export default function BusinessRegisterPage() {
     return () => { mounted = false; };
   }, []);
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const webpageURL = String(formData.get("website") || "").trim();
+    const companyName = String(formData.get("companyName") || "").trim();
+    const ownerFirstName = String(formData.get("firstName") || "").trim();
+    const ownerLastName = String(formData.get("lastName") || "").trim();
+    const workEmail = String(formData.get("workEmail") || "").trim();
+    const companyPassword = String(formData.get("password") || "");
+    const passwordrepeat = String(formData.get("passwordrepeat") || "");
+    const phoneNumber = String(formData.get("phone") || "");
+    const professions = formData.getAll("jobTitles").map(String);
+    if (companyName.length > 20) { setError("Brugernavn må højst være 14 tegn"); return; }
+    if (workEmail.length > 40) { setError("Email må højst være 40 tegn"); return; }
+    if (!/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(companyPassword)) { setError("Kodeord skal være mindst 8 tegn og indeholde 1 stort bogstav og 1 tal"); return; }
+
+    // Basic client-side validation in Danish
+    if (!webpageURL || !companyName || !ownerFirstName || !ownerLastName || !workEmail || !companyPassword || !passwordrepeat || !phoneNumber) {
+      setError("Manglende påkrævede felter");
+      return alert(error);
+    }
+
+    if (companyPassword !== passwordrepeat) {
+      setError("Kodeordene matcher ikke");
+      return alert(error);
+    }
+
+    const response = await fetch("/api/create-company", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(
+        {companyName,
+        companyPassword,
+        webpageURL,
+        ownerFirstName,
+        ownerLastName,
+        workEmail,
+        phoneNumber,
+        professions}
+      ),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      setError(errorData.message || "Kunne ikke oprette konto");
+      return;
+    }
+
+    window.location.href = "/login";
+  };
+
   return (
     <section className={styles.page}>
       <div className={styles.heroShapes} aria-hidden="true">
@@ -42,7 +97,7 @@ export default function BusinessRegisterPage() {
           <p>Registrér din virksomhed og fortæl hvilke lærepladser I tilbyder.</p>
         </div>
 
-        <form action={registerBusiness} className={styles.card}>
+        <form onSubmit={handleSubmit} className={styles.card}>
           <div className={styles.grid}>
             <div>
               <label className={styles.label} htmlFor="website">Virksomhedens hjemmeside</label>
@@ -71,6 +126,10 @@ export default function BusinessRegisterPage() {
             <div>
               <label className={styles.label} htmlFor="password">Kodeord</label>
               <input id="password" name="password" type="password" className={styles.input} />
+            </div>
+            <div>
+              <label className={styles.label} htmlFor="password">Gentag Kodeord</label>
+              <input id="passwordrepeat" name="passwordrepeat" type="password" className={styles.input} />
             </div>
             <div>
               <label className={styles.label} htmlFor="phone">Telefonnummer</label>
