@@ -23,6 +23,7 @@ export default function WriteAReview() {
 						<HomeSearch
 							placeholder="Find en virksomhed at anmelde"
 							ariaLabel="Søg virksomhed"
+							target="write"
 						/>
 					</div>
 				</section>

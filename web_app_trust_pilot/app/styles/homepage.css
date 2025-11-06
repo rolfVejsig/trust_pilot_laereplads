@@ -249,12 +249,18 @@
 }
 
 .hero-item {
+  display: block;               /* make the whole row clickable */
   padding: 10px 14px;
-  cursor: default;
+  border-radius: 10px;
+  text-decoration: none;        /* remove underline on link */
+  color: inherit;               /* keep text color */
+  cursor: pointer;              /* pointer for links */
 }
 
-.hero-item:hover {
+.hero-item:hover,
+.hero-item:focus-visible {
   background: #f8fafc; /* slate-50 */
+  outline: none;
 }
 
 .hero-title {

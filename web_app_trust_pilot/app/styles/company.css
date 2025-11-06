@@ -95,7 +95,7 @@
 .bars { margin-top: 8px; display: grid; gap: 6px; }
 .bar {
   display: grid;
-  grid-template-columns: 60px 1fr 40px;
+  grid-template-columns: 96px 1fr 40px;
   align-items: center;
   gap: 8px;
   font-size: 12px;
@@ -115,6 +115,20 @@
 .review-teaser {
   background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px;
 }
+.review-teaser p { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+
+.stars-green { color: #10b981; }
+
+.review-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.rev-left { display: inline-flex; align-items: center; gap: 8px; }
+.avatar-sm { width: 32px; height: 32px; border-radius: 999px; background: #f1f5f9; color: #0f172a; font-weight: 800; display:flex; align-items:center; justify-content:center; }
+.author-name { font-weight: 700; color: #0f172a; }
+.rev-date { color: #64748b; font-size: 12px; }
+.review-title-strong { margin: 8px 0 6px; font-size: 16px; font-weight: 800; color: #0f172a; }
+
+.stars-box { display: inline-flex; gap: 4px; margin: 4px 0; }
+.star-box { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 1px solid #e5e7eb; border-radius: 4px; font-size: 14px; line-height: 1; background: #fff; }
+.star-box.filled { font-weight: 900; }
 
 .contact, .company-info { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; }
 
@@ -130,6 +144,16 @@
 .filters { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; }
 .review-list { display: grid; gap: 12px; }
 .review-item { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; }
+.review-item p { white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+
+/* Controls within review list */
+.review-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
+.search-inp { display: flex; align-items: center; gap: 8px; border: 1px solid #e5e7eb; border-radius: 999px; padding: 6px 10px; background: #fff; flex: 1; }
+.search-inp input { border: none; outline: none; width: 100%; }
+.chip { border: 1px solid #e5e7eb; background: #fff; border-radius: 999px; padding: 6px 10px; color: #334155; }
+.sort-sel { display: inline-flex; align-items: center; gap: 8px; }
+.sort-sel select { border: 1px solid #e5e7eb; border-radius: 8px; padding: 6px 10px; }
+.mini-tag { display: inline-block; border: 1px solid #e5e7eb; background: #f8fafc; color: #334155; border-radius: 999px; padding: 4px 8px; font-size: 12px; }
 
 @media (max-width: 960px) {
   .company-hero { grid-template-columns: 1fr; }

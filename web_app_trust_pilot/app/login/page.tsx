@@ -2,8 +2,23 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import styles from "./login.module.css"; 
 import { login } from "@/authlib";
+import { getSessionUser } from "@/authlib";
+import ErrorBanner from "./ErrorBanner";
 
-export default function LoginPage() {
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+type SP = { [key: string]: string | string[] | undefined };
+
+export default async function LoginPage({ searchParams }: { searchParams?: SP }) {
+  const errParam = searchParams?.error;
+  const rtParam = searchParams?.returnTo;
+  const error = Array.isArray(errParam) ? (errParam[0] || "") : (errParam || "");
+  const returnTo = Array.isArray(rtParam) ? (rtParam[0] || "/") : (rtParam || "/");
+  const user = await getSessionUser();
+  if (user) {
+    redirect(returnTo || "/");
+  }
 
   return (
     <section className={`${styles.loginRoot} ${styles.loginSection} flex flex-col min-h-screen items-center justify-center p-6`}>
@@ -15,8 +30,15 @@ export default function LoginPage() {
       <form
         action={async (formData) => {
           "use server";
-          await login(formData); 
-          redirect('/');
+          try {
+            await login(formData);
+            const rt = String(formData.get('returnTo') || '/') || '/';
+            redirect(rt);
+          } catch (e: any) {
+            const msg = e?.message ? String(e.message) : 'Kunne ikke logge ind';
+            const rt = String(formData.get('returnTo') || '/') || '/';
+            redirect(`/login?error=${encodeURIComponent(msg)}&returnTo=${encodeURIComponent(rt)}`);
+          }
         }}
         className="w-full max-w-md space-y-6 rounded-2xl bg-white p-8 shadow-xl border border-gray-200"
       >
@@ -26,6 +48,7 @@ export default function LoginPage() {
         </div>
 
         <div className="space-y-4">
+          <input type="hidden" name="returnTo" value={returnTo} />
           <input
             type="text"
             name="username"
@@ -41,6 +64,8 @@ export default function LoginPage() {
             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-400"
           />
         </div>
+
+        <ErrorBanner />
 
         <button
           type="submit"

@@ -51,25 +51,46 @@ export async function login(formData: FormData) {
     if (!identifier || !password) throw new Error('Udfyld brugernavn/email og kodeord');
 
     const hashed = crypto.createHash('sha256').update(password).digest('hex');
+    const md5 = crypto.createHash('md5').update(password).digest('hex'); // legacy fallback if needed
 
     const conn = await GetConnection();
     try {
+        // Be robust to case differences in stored data by comparing in LOWER()
         const [rows] = await conn.query(
             `SELECT UserId as id, UserName as name, UserEmail as email, UserPassword as hash
              FROM Users
-             WHERE UserEmail = ? OR UserName = ?
+             WHERE LOWER(TRIM(UserEmail)) = LOWER(TRIM(?))
+                OR LOWER(TRIM(UserName)) = LOWER(TRIM(?))
              LIMIT 1`,
             [identifier, identifier]
         );
         const list = rows as any[];
         if (!Array.isArray(list) || list.length === 0) throw new Error('Forkert brugernavn eller kodeord');
         const u = list[0];
-        if (String(u.hash) !== hashed) throw new Error('Forkert brugernavn eller kodeord');
+        // Compare hashes case-insensitively to tolerate different HEX casing
+        const dbHash = String(u.hash || '').trim();
+        let ok = dbHash.toLowerCase() === hashed;
+
+        // Legacy fallbacks: allow plain-text or MD5 stored passwords (dev data), then migrate to SHA-256
+        if (!ok && dbHash && dbHash.length && dbHash.indexOf(':') === -1) {
+            if (dbHash === password) {
+                ok = true;
+            } else if (dbHash.length === 32 && dbHash.toLowerCase() === md5) {
+                ok = true;
+            }
+            if (ok) {
+                // Migrate to SHA-256 immediately
+                try {
+                    await (await GetConnection()).execute(`UPDATE Users SET UserPassword = ? WHERE UserId = ?`, [hashed, Number(u.id)]);
+                } catch {}
+            }
+        }
+        if (!ok) throw new Error('Forkert brugernavn eller kodeord');
 
         const user: SessionUser = { id: Number(u.id), name: String(u.name || ''), email: String(u.email || '') };
         const expires = new Date(Date.now() + 60 * 120 * 1000);
-        const session = await encrypt({ user, expires });
-        (await cookies()).set('session', session, { expires, httpOnly: true });
+    const session = await encrypt({ user, expires });
+    (await cookies()).set('session', session, { expires, httpOnly: true, path: '/', sameSite: 'lax' as any });
         return true;
     } finally {
         try { await conn.end(); } catch {}

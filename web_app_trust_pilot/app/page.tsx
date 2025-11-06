@@ -1,11 +1,100 @@
 import "./styles/homepage.css";
+import "./styles/company.css"; // reuse star box styles
 import Image from "next/image";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CookieConsent from "./components/CookieConsent";
 import HomeSearch from "./components/HomeSearch";
+import { GetConnection } from "./api/connection";
 
-export default function Home() {
+type LatestReview = {
+  id: number;
+  points: number;
+  body: string;
+  title?: string;
+  date?: string;
+  companyId: number;
+  companyName: string;
+};
+
+const STAR_COLORS = ["#ef4444", "#f97316", "#f59e0b", "#84cc16", "#22c55e"]; // 1..5
+function colorFor(points: number) {
+  const p = Math.max(1, Math.min(5, Math.round(points)));
+  return STAR_COLORS[p - 1];
+}
+
+function StarBoxes({ points }: { points: number }) {
+  const p = Math.max(0, Math.min(5, Math.round(points)));
+  const col = colorFor(points);
+  return (
+    <div className="stars-box" aria-label={`${p} ud af 5 stjerner`}>
+      {Array.from({ length: 5 }).map((_, i) => {
+        const idx = i + 1;
+        const filled = idx <= p;
+        return (
+          <span
+            key={idx}
+            className={`star-box${filled ? " filled" : ""}`}
+            style={{ color: filled ? col : "#cbd5e1", borderColor: filled ? col : "#e5e7eb" }}
+          >
+            ★
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+async function getLatestReviews(limit = 8): Promise<LatestReview[]> {
+  try {
+    const conn = await GetConnection();
+    // Discover column names dynamically to handle schema changes
+  const [cols] = await conn.query(`SHOW COLUMNS FROM Ratings`);
+  const names = new Set((cols as any[]).map(c => String(c.Field)));
+  const textCol = names.has('Text') ? 'Text' : (names.has('ReviewText') ? 'ReviewText' : 'RatingText');
+  const titleCol = names.has('Title') ? 'Title' : (names.has('ReviewTitle') ? 'ReviewTitle' : (names.has('RatingTitle') ? 'RatingTitle' : null));
+  const dateCol = names.has('ReviewDate') ? 'ReviewDate' : (names.has('Date') ? 'Date' : (names.has('CreatedAt') ? 'CreatedAt' : (names.has('RatingDate') ? 'RatingDate' : null)));
+
+    const selectFields = [
+      'r.RatingId AS id',
+      'r.Points AS points',
+      `r.${textCol} AS body`,
+      titleCol ? `r.${titleCol} AS title` : 'NULL AS title',
+      dateCol ? `r.${dateCol} AS date` : 'NULL AS date',
+      'u.UserName AS userName',
+      'c.CompanyId AS companyId',
+      'c.CompanyName AS companyName'
+    ].join(',\n              ');
+
+    const [rows] = await conn.query(
+      `SELECT ${selectFields}
+       FROM Ratings r
+       JOIN Users u ON u.UserId = r.Rater
+       JOIN Companies c ON c.CompanyId = r.Company
+       WHERE u.UserEmail NOT LIKE '%@example.com'
+       ORDER BY r.RatingId DESC
+       LIMIT ?`,
+      [limit]
+    );
+    await conn.end();
+    const list = rows as any[];
+    return (Array.isArray(list) ? list : []).map(r => ({
+      id: Number(r.id),
+      points: Number(r.points),
+      body: String(r.body || ""),
+      title: r.title ? String(r.title) : undefined,
+      date: r.date ? String(r.date) : undefined,
+      companyId: Number(r.companyId),
+      companyName: String(r.companyName || ""),
+    } as LatestReview));
+  } catch (e) {
+    console.error("Kunne ikke hente seneste anmeldelser:", e);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const latest = await getLatestReviews(8);
   return (
     <>
       <Header />
@@ -186,18 +275,30 @@ export default function Home() {
       <section className="reviews">
         <h2>Seneste Anmeldelser</h2>
         <div className="reviews-grid">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((review) => (
-            <div key={review} className="review-card">
-              <p>"Fantastisk læreplads – jeg lærte så meget på kort tid."</p>
-              <div className="stars">
-                <i className="material-icons">star</i>
-                <i className="material-icons">star</i>
-                <i className="material-icons">star</i>
-                <i className="material-icons">star</i>
-                <i className="material-icons" style={{ color: '#d1d5db' }}>star</i>
-              </div>
-            </div>
-          ))}
+          {latest.length === 0 ? (
+            <div className="review-card">Der er endnu ingen anmeldelser.</div>
+          ) : (
+            latest.map((r) => (
+              <a key={r.id} className="review-card" href={`/review/${r.companyId}`} aria-label={`Se ${r.companyName}`}>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 6 }}>
+                  <StarBoxes points={r.points} />
+                  {r.date && (
+                    <span style={{ color:'#64748b', fontSize: 12 }}>
+                      {(() => {
+                        const t = new Date(r.date!);
+                        return isNaN(t.getTime()) ? r.date : t.toLocaleDateString('da-DK', { day:'2-digit', month:'long', year:'numeric' });
+                      })()}
+                    </span>
+                  )}
+                </div>
+                {r.title && <h4 style={{ margin: '4px 0 8px', fontWeight: 800, color: '#0f172a', fontSize: 16 }}>{r.title}</h4>}
+                <p style={{ margin: 0 }}>
+                  {r.body.length > 160 ? r.body.slice(0, 157) + "…" : r.body}
+                </p>
+                <div style={{ marginTop: 10, color: '#64748b', fontSize: 13 }}>{r.companyName}</div>
+              </a>
+            ))
+          )}
         </div>
       </section>
 

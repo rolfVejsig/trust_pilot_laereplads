@@ -99,10 +99,12 @@ export default function Header() {
               ) : (
                 <ul className="search-list" role="listbox">
                   {results.map((c) => (
-                    <li key={c.id} className="search-item" role="option">
-                      <div className="company-title">{c.name}</div>
-                      {c.url && <div className="company-sub">{c.url}</div>}
-                      <span className="pill-score">Demo</span>
+                    <li key={c.id} role="option">
+                      <Link href={`/review/${c.id}`} className="search-item">
+                        <div className="company-title">{c.name}</div>
+                        {c.url && <div className="company-sub">{c.url}</div>}
+                        <span className="pill-score">Demo</span>
+                      </Link>
                     </li>
                   ))}
                 </ul>
